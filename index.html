@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group 2 | Intelligent Matching Beyond Similarity</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Vazirmatn:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #06b6d4;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        .ltr {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .rtl {
+            direction: rtl;
+            text-align: right;
+            font-family: 'Vazirmatn', system-ui, sans-serif;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header / Hero */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%);
+            color: #ffffff;
+            padding: 50px 0 40px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #38bdf8;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            max-width: 800px;
+            margin-bottom: 28px;
+        }
+
+        /* Action Buttons & Stats */
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Strip */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #38bdf8;
+            font-family: 'Inter', sans-serif;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        /* Search & Filter Bar */
+        .control-section {
+            background-color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin: -25px auto 35px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 10;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1 1 300px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 42px 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* Team Section */
+        .team-section {
+            margin-bottom: 40px;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .team-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            transition: transform 0.2s;
+        }
+        .team-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .member-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--secondary);
+            margin-bottom: 4px;
+        }
+        .member-role {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .member-keywords {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Papers Grid */
+        .papers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .paper-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .paper-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .paper-header {
+            padding: 20px 24px 14px;
+            border-bottom: 1px dashed var(--border-color);
+            background: #fafafa;
+        }
+
+        .paper-meta-top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .tag-survey {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .tag-research {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .tag-year {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-family: 'Inter', sans-serif;
+        }
+        .tag-domain {
+            background-color: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .paper-title-en {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            line-height: 1.45;
+            margin-bottom: 8px;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .paper-authors {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .paper-body {
+            padding: 20px 24px;
+        }
+
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item span {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .summary-block {
+            margin-top: 14px;
+        }
+
+        .summary-header {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .summary-text-fa {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.8;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .summary-text-en {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.65;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--primary);
+        }
+
+        .paper-footer {
+            padding: 12px 24px 16px;
+            background-color: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .doi-link {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            direction: ltr;
+            font-family: 'Inter', sans-serif;
+        }
+        .doi-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Comparative Table Section */
+        .table-section {
+            background-color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .comp-table th {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 12px 14px;
+            font-weight: 600;
+        }
+
+        .comp-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            .control-section { padding: 16px; }
+            .paper-header, .paper-body { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-content">
+            <div class="badge-group">
+                <i class="fa-solid fa-graduation-cap"></i>
+                گروه ۲ | دانشگاه صنعتی شریف / دانشکده مدیریت و اقتصاد
+            </div>
+            <h1 class="title">Intelligent Matching Beyond Similarity</h1>
+            <p class="subtitle">
+                مرور جامع ادبیات پژوهشی روی مدل‌ها، چالش‌ها و روش‌های هوشمند تطابق و پیشنهاددهی متقابل، تکمیلی، سازگاری و آگاه از محدودیت (بازه زمانی ۲۰۲۱ تا ۲۰۲۶)
+            </p>
+
+            <div class="header-actions">
+                <a href="intelligent-matching-literature-review.docx" class="btn btn-primary" download>
+                    <i class="fa-solid fa-file-word"></i>
+                    دانلود فایل Word گزارش (.docx)
+                </a>
+                <button class="btn btn-outline" onclick="scrollToTable()">
+                    <i class="fa-solid fa-table"></i>
+                    جدول مقایسه‌ای مقالات
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label">تعداد کل مقالات</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3 / 7</div>
+                    <div class="stat-label">Survey / Research Article</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2021-2026</div>
+                    <div class="stat-label">بازه زمانی انتشار</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">6+</div>
+                    <div class="stat-label">حوزه‌های کاربردی مختلف</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Controls: Search & Filter -->
+        <div class="control-section">
+            <div class="controls-wrapper">
+                <div class="search-box">
+                    <input type="text" id="searchInput" onkeyup="filterPapers()" placeholder="جستجو در عنوان، نویسندگان، حوزه‌ها یا کلیدواژه‌ها...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="setFilter('all', this)">همه مقالات</button>
+                    <button class="filter-btn" onclick="setFilter('survey', this)">Review / Survey</button>
+                    <button class="filter-btn" onclick="setFilter('research', this)">Research Article</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Contributions -->
+        <div class="team-section">
+            <h2 class="section-title">
+                <i class="fa-solid fa-users"></i>
+                تقسیم کار و مسئولیت‌های اعضای گروه (Team Member Contributions)
+            </h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="member-name">آرمین فاضلی</div>
+                    <div class="member-role">جستجو و تحلیل مقالات ۱ و ۲</div>
+                    <div class="member-keywords">
+                        <strong>کلیدواژه‌ها:</strong> "preference drift", "similarity-based matching", "semantic matching"<br>
+                        <strong>حوزه‌ها:</strong> Job Recommendation, Similarity Computation
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-name">فاطمه ملک نژاد</div>
+                    <div class="member-role">جستجو و تحلیل مقالات ۳ و ۴</div>
+                    <div class="member-keywords">
+                        <strong>کلیدواژه‌ها:</strong> "reciprocal recommendation", "two-sided matching", "reciprocal acceptance"<br>
+                        <strong>حوزه‌ها:</strong> Dating & Job Reciprocal Matching, LLM Agents
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-name">یگانه مجرد</div>
+                    <div class="member-role">جستجو و تحلیل مقالات ۵ و ۶</div>
+                    <div class="member-keywords">
+                        <strong>کلیدواژه‌ها:</strong> "compatibility matching", "complementary recommendation", "intent-aware"<br>
+                        <strong>حوزه‌ها:</strong> Fashion Recommendation, E-commerce
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="member-name">مبینا موسوی</div>
+                    <div class="member-role">جستجو و تحلیل مقالات ۷ و ۸</div>
+                    <div class="member-keywords">
+                        <strong>کلیدواژه‌ها:</strong> "bilateral matching", "mutual satisfaction", "constraint-aware"<br>
+                        <strong>حوزه‌ها:</strong> Healthcare Matching, Reciprocal Surveys
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Papers Cards Grid -->
+        <div class="papers-grid" id="papersGrid">
+
+            <!-- Paper 1 -->
+            <div class="paper-card" data-type="research" data-domain="job">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2024</span>
+                        <span class="tag tag-domain">Job Matching / Preference Drift</span>
+                    </div>
+                    <h2 class="paper-title-en">Adapting Job Recommendations to User Preference Drift with Behavioral-Semantic Fusion Learning</h2>
+                    <div class="paper-authors">Xiao Han, Chen Zhu, Xiao Hu, Chuan Qin, Xiangyu Zhao, Hengshu Zhu</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>ACM KDD (2024)</span></div>
+                        <div class="info-item">جستجوکننده: <span>آرمین فاضلی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله مسئله رانش ترجیحات شغلی (Preference Drift) کاربران را در سیستم‌های توصیه‌گر شغلی برطرف می‌کند. چارچوب BISTRO با تلفیق تعاملات رفتاری و معنایی، خوشه‌بندی مبتنی بر نشست و فیلترگذاری موجک ابرگراف، نویز تعاملات را حذف کرده و ترجیحات متغیر کاربر را برای پیشنهاد دقیق‌تر شغل مدل‌سازی می‌کند. آزمایش‌های آنلاین و آفلاین برتری چشمگیر این روش را تایید کرده‌اند.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This paper addresses user preference drift in job recommender systems by introducing BISTRO, a session-based framework using behavioral-semantic fusion learning. BISTRO employs coarse-grained semantic clustering, fine-grained hypergraph wavelet learning, adaptive wavelet filtering to eliminate interaction noise, and recurrent neural networks to capture evolving preferences across job-seeking sessions.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1145/3637528.3671759" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1145/3637528.3671759</a>
+                </div>
+            </div>
+
+            <!-- Paper 2 -->
+            <div class="paper-card" data-type="survey" data-domain="similarity">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-survey">Survey</span>
+                        <span class="tag tag-year">2024</span>
+                        <span class="tag tag-domain">Similarity Computation</span>
+                    </div>
+                    <h2 class="paper-title-en">Deep Learning Approaches for Similarity Computation: A Survey</h2>
+                    <div class="paper-authors">Peilun Yang, Hanchen Wang, Jianye Yang, Zhengping Qian, Ying Zhang, Xuemin Lin</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>IEEE TKDE (2024)</span></div>
+                        <div class="info-item">جستجوکننده: <span>آرمین فاضلی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله مروری جامع، روش‌های یادگیری عمیق برای محاسبه شباهت روی انواع داده‌ها (مجموعه، دنباله و گراف) را بررسی می‌کند. مقاله رویکردها را بر اساس هدف یادگیری به سه دسته اصلی شامل یادگیری شباهت، یادگیری ماتریس هزینه و یادگیری هیوریستیک جست‌وجو تقسیم‌بندی می‌نماید و مرز میان یادگیری معیار در یادگیری ماشین و محاسبه شباهت صریح در پایگاه‌داده را روشن می‌سازد.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This comprehensive survey reviews deep learning-based similarity computation methods across sets, sequences, and graphs. It categorizes learning-based similarity approaches into three main objectives: metric/similarity learning, cost matrix learning, and search heuristic learning, providing a detailed taxonomy that bridges database query efficiency and machine learning representation.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1109/TKDE.2024.3422484" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1109/TKDE.2024.3422484</a>
+                </div>
+            </div>
+
+            <!-- Paper 3 -->
+            <div class="paper-card" data-type="research" data-domain="reciprocal">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2025</span>
+                        <span class="tag tag-domain">Reciprocal Recommendation</span>
+                    </div>
+                    <h2 class="paper-title-en">biLorentzFM: Hyperbolic Multi-Objective Deep Learning for Reciprocal Recommendation</h2>
+                    <div class="paper-authors">Kübra Karacan Uyar, Yücel Batu Salman</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Applied Sciences (2025)</span></div>
+                        <div class="info-item">جستجوکننده: <span>فاطمه ملک نژاد</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله مدل biLorentzFM را معرفی می‌کند که از فضای هذلولی لورنتس و ماشین‌های فاکتورگیری برای مدل‌سازی ترجیحات دوطرفه در سیستم‌های توصیه‌گر متقابل (کاریابی و دوستیابی) استفاده می‌کند. این روش هندسه هذلولی و انحنای یادگیری‌پذیر را برای نمایش ساختارهای سلسله‌مراتبی ترجیحات دو طرف به کار گرفته و بهبود ۶.۶ درصدی شاخص AUC در کاریابی را نشان می‌دهد.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This research presents biLorentzFM, a multi-objective deep learning framework for reciprocal recommendation that models bilateral preferences in Lorentz hyperbolic space. By combining learnable manifold curvature with factorization machines, biLorentzFM effectively captures complex hierarchical structures in recruitment and online dating markets, achieving significant AUC gains over Euclidean baselines.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.3390/app152212340" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.3390/app152212340</a>
+                </div>
+            </div>
+
+            <!-- Paper 4 -->
+            <div class="paper-card" data-type="research" data-domain="twosided">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2026</span>
+                        <span class="tag tag-domain">Two-Sided LLM Matching</span>
+                    </div>
+                    <h2 class="paper-title-en">From Preference to Reciprocity: Decentralized Matching with Empirically Grounded LLM-Agent Based Modeling</h2>
+                    <div class="paper-authors">Wangxuan Fan, Xiaoyu Nie, Zhoutian Shi, Xiangcheng Meng, Shipei Zeng, Pin Gao, Yan Hu, Zhongxiang Dai</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Preprint / Under Review (2026)</span></div>
+                        <div class="info-item">جستجوکننده: <span>فاطمه ملک نژاد</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله یک چارچوب غیرمتمرکز تطابق دوطرفه با ترکیب عامل‌های مبتنی بر مدل‌های زبانی بزرگ (LLM) و باندیت‌های زمینه‌ای ارائه می‌دهد. عامل‌ها علاوه بر ارزیابی ترجیحات خود، احتمال پذیرش متقابل طرف مقابل را یاد می‌گیرند که این امر منجر به افزایش رفاه متقابل و کاهش جفت‌های مسدودکننده نسبت به الگوریتم گیل-شپلی می‌شود.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This paper develops a decentralized two-sided matching framework combining LLM agents with contextual bandits (Logistic-UCB) to simulate reciprocal acceptance under incomplete information. Agents evaluate local candidate interactions while learning the probability of reciprocal acceptance, outperforming standard Gale-Shapley baselines in mutual welfare and blocking pair reduction.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://arxiv.org/abs/2609.34679" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Link: arXiv:2609.34679</a>
+                </div>
+            </div>
+
+            <!-- Paper 5 -->
+            <div class="paper-card" data-type="research" data-domain="fashion">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2022</span>
+                        <span class="tag tag-domain">Fashion Compatibility</span>
+                    </div>
+                    <h2 class="paper-title-en">Learning compatibility knowledge for outfit recommendation with complementary clothing matching</h2>
+                    <div class="paper-authors">Ruomei Wang, Jianfeng Wang, Zhuo Su</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Computer Communications (2022)</span></div>
+                        <div class="info-item">جستجوکننده: <span>یگانه مجرد</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله به تطبیق سازگاری در سیستم‌های پیشنهاد ست لباس می‌پردازد. مدل پیشنهادی به جای تکیه بر شباهت ظاهری یا معنایی محض، روابط سازگاری و مکمل بودن بین تکه‌های مختلف لباس را یاد می‌گیرد تا تشخیص دهد کدام آیتم‌ها در کنار هم یک ست مناسب را تشکیل می‌دهند.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This study explores compatibility matching for fashion outfit recommendation by learning non-redundant compatibility and complementarity relationships between clothing items. Moving beyond visual/semantic similarity, the model evaluates whether items harmoniously combine into a complete set, demonstrating superior personalized outfit matching performance.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1016/j.comcom.2021.10.022" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1016/j.comcom.2021.10.022</a>
+                </div>
+            </div>
+
+            <!-- Paper 6 -->
+            <div class="paper-card" data-type="research" data-domain="ecommerce">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2022</span>
+                        <span class="tag tag-domain">E-commerce Complementary</span>
+                    </div>
+                    <h2 class="paper-title-en">Learning aspect-level complementarity for intent-aware complementary recommendation</h2>
+                    <div class="paper-authors">Rui Wang, Ning Yang, Philip S. Yu</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Knowledge-Based Systems (2022)</span></div>
+                        <div class="info-item">جستجوکننده: <span>یگانه مجرد</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله مدل AICRec را برای پیشنهاد محصولات مکمل آگاه از هدف کاربر ارائه می‌دهد. این روش به جای اتکای صرف بر خریدهای همزمان مکرر، مکمل بودن محصولات را در سطح ویژگی‌های مختلف و با در نظر گرفتن نیت واقعی کاربر مدل‌سازی می‌کند.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This paper proposes AICRec, an intent-aware complementary recommendation model that learns product complementarity at the aspect level. By capturing underlying user intents rather than relying solely on frequent co-occurrence patterns, AICRec effectively recommends functional complementary items across e-commerce categories.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1016/j.knosys.2022.109936" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1016/j.knosys.2022.109936</a>
+                </div>
+            </div>
+
+            <!-- Paper 7 -->
+            <div class="paper-card" data-type="survey" data-domain="reciprocal">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-survey">Systematic Review</span>
+                        <span class="tag tag-year">2021</span>
+                        <span class="tag tag-domain">Reciprocal Recommendation</span>
+                    </div>
+                    <h2 class="paper-title-en">Reciprocal Recommender Systems: Analysis of state-of-art literature, challenges and opportunities</h2>
+                    <div class="paper-authors">Ivan Palomares, Carlos Porcel, Luiz Pizzato, Ido Guy, Enrique Herrera-Viedma</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Information Fusion (2021)</span></div>
+                        <div class="info-item">جستجوکننده: <span>مبینا موسوی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            مرور سیستماتیک جامع بر سیستم‌های توصیه‌گر متقابل که ساختارها، روش‌های فیلترینگ تعاملی و ترکیبی، معیارهای سنجش پذیرش دوطرفه و چالش‌های حریم خصوصی و عدالت را در بسترهای کاریابی و دوستیابی ارزیابی می‌کند.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            A comprehensive systematic review establishing taxonomies, theoretical foundations, and algorithmic strategies for Reciprocal Recommender Systems across dating, job matching, and social platforms, detailing evaluation metrics, reciprocity constraints, and future research directions.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1016/j.inffus.2020.12.001" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1016/j.inffus.2020.12.001</a>
+                </div>
+            </div>
+
+            <!-- Paper 8 -->
+            <div class="paper-card" data-type="research" data-domain="healthcare">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2023</span>
+                        <span class="tag tag-domain">Healthcare Bilateral Matching</span>
+                    </div>
+                    <h2 class="paper-title-en">Doctor-patient bilateral matching considering diagnosis and treatment perception in the absence of public health resources</h2>
+                    <div class="paper-authors">Yu Zhu, Long He, Xia Guo</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Frontiers in Public Health (2023)</span></div>
+                        <div class="info-item">جستجوکننده: <span>مبینا موسوی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            این مقاله یک مدل تصمیم‌گیری برای تطابق دوطرفه پزشک و بیمار در پلتفرم‌های آنلاین سلامت ارائه می‌دهد که با در نظر گرفتن تخصص، ظرفیت پزشک و انتظارات بیمار، صف‌های انتظار را کاهش داده و رضایت متقابل را افزایش می‌دهد.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            This paper develops a constraint-aware multi-attribute bilateral matching optimization framework for online healthcare platforms, balancing physician specialty alignment and workload constraints with patient psychological expectations and wait times.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.3389/fpubh.2022.1095033" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.3389/fpubh.2022.1095033</a>
+                </div>
+            </div>
+
+            <!-- Paper 9 -->
+            <div class="paper-card" data-type="survey" data-domain="team">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-survey">Systematic Review</span>
+                        <span class="tag tag-year">2023</span>
+                        <span class="tag tag-domain">Team Formation</span>
+                    </div>
+                    <h2 class="paper-title-en">Team Formation: A Systematic Literature Review</h2>
+                    <div class="paper-authors">Georgios Stavrou, Panagiotis Adamidis, Jason Papathanasiou, Kostas Tarabanis</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>IJBSAM (2023)</span></div>
+                        <div class="info-item">جستجوکننده: <span>همکاری گروهی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            مرور سیستماتیک الگوریتم‌های تشکیل تیم بر اساس چند ویژگی مانند پوشش مهارت، سازگاری شخصیتی و شبکه‌های ارتباطی برای بهینه‌سازی همکاری‌های تیمی در محیط‌های دانشگاهی و سازمانی.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            A systematic review surveying multi-attribute algorithmic team formation techniques, classifying methods by skill coverage, personality compatibility, and workload balance constraints across academic and corporate environments.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://www.business-and-management.org/papers/team-formation-a-systematic-literature-review/174/" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Link: IJBSAM 2023</a>
+                </div>
+            </div>
+
+            <!-- Paper 10 -->
+            <div class="paper-card" data-type="research" data-domain="mentorship">
+                <div class="paper-header">
+                    <div class="paper-meta-top">
+                        <span class="tag tag-research">Research Article</span>
+                        <span class="tag tag-year">2026</span>
+                        <span class="tag tag-domain">Mentorship Matching</span>
+                    </div>
+                    <h2 class="paper-title-en">Comparative Study of One-Way Mentor-Mentee Matching Algorithms Under Varying Constraint Complexities</h2>
+                    <div class="paper-authors">Daniel O'Driscoll, Jing Hua Ye</div>
+                </div>
+                <div class="paper-body">
+                    <div class="info-row">
+                        <div class="info-item">نشریه / کنفرانس: <span>Springer Nature (2026)</span></div>
+                        <div class="info-item">جستجوکننده: <span>همکاری گروهی</span></div>
+                    </div>
+                    <div class="summary-block">
+                        <div class="summary-header"><i class="fa-solid fa-align-right"></i> خلاصه فارسی:</div>
+                        <p class="summary-text-fa">
+                            ارزیابی تجربی الگوریتم‌های تطابق منتور و منتی (استاد-دانشجو) تحت محدودیت‌های واقعی مانند مکمل بودن مهارت‌ها و اهداف شغلی جهت ارتقای کیفیت و سرعت سیستم‌های هدایت آموزشی.
+                        </p>
+                        <div class="summary-header" style="direction:ltr;"><i class="fa-solid fa-align-left"></i> English Summary:</div>
+                        <p class="summary-text-en">
+                            An empirical study investigating mentor-mentee matching algorithms under dynamic constraint complexities, demonstrating the critical impact of constraint sequencing on match quality and computational scalability.
+                        </p>
+                    </div>
+                </div>
+                <div class="paper-footer">
+                    <a href="https://doi.org/10.1007/978-3-031-78901-2_9" target="_blank" class="doi-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> DOI: 10.1007/978-3-031-78901-2_9</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Comparative Table -->
+        <div class="table-section" id="compTableSection">
+            <h2 class="section-title" style="direction:rtl;">
+                <i class="fa-solid fa-table-list"></i>
+                جدول مقایسه‌ای و خلاصه ۱۰ مقاله (All 10 Papers at a Glance)
+            </h2>
+            <table class="comp-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Authors</th>
+                        <th>Year</th>
+                        <th>Type</th>
+                        <th>Domain</th>
+                        <th>Key Mechanism</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Adapting Job Recommendations... (BISTRO)</td>
+                        <td>Han et al.</td>
+                        <td>2024</td>
+                        <td>Research Article</td>
+                        <td>Job Matching</td>
+                        <td>Behavioral-Semantic Hypergraph Wavelet Filtering</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Deep Learning Similarity Computation Survey</td>
+                        <td>Yang et al.</td>
+                        <td>2024</td>
+                        <td>Survey</td>
+                        <td>Similarity Mining</td>
+                        <td>Metric, Cost Matrix & Search Heuristic Taxonomy</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>biLorentzFM: Hyperbolic Reciprocal Matching</td>
+                        <td>Karacan Uyar et al.</td>
+                        <td>2025</td>
+                        <td>Research Article</td>
+                        <td>Dating / Job Matching</td>
+                        <td>Lorentz Hyperbolic Manifold Factorization Machines</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>From Preference to Reciprocity (LLM Agents)</td>
+                        <td>Fan et al.</td>
+                        <td>2026</td>
+                        <td>Research Article</td>
+                        <td>Two-Sided Matching</td>
+                        <td>Decentralized LLM Agents with Contextual Bandits</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Learning Compatibility Knowledge in Outfit Rec.</td>
+                        <td>Wang et al.</td>
+                        <td>2022</td>
+                        <td>Research Article</td>
+                        <td>Fashion Recommendation</td>
+                        <td>Non-Redundant Outfit Compatibility Knowledge Learning</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Intent-Aware Aspect Complementarity (AICRec)</td>
+                        <td>Wang et al.</td>
+                        <td>2022</td>
+                        <td>Research Article</td>
+                        <td>E-commerce</td>
+                        <td>Aspect-Level Intent-Aware Functional Complementarity</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Reciprocal Recommender Systems Survey</td>
+                        <td>Palomares et al.</td>
+                        <td>2021</td>
+                        <td>Systematic Review</td>
+                        <td>Social & Matching Markets</td>
+                        <td>Bilateral Preference & Reciprocity Metrics Taxonomy</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Doctor-Patient Bilateral Matching</td>
+                        <td>Zhu et al.</td>
+                        <td>2023</td>
+                        <td>Research Article</td>
+                        <td>Healthcare Platforms</td>
+                        <td>Multi-Attribute Constraint-Aware Utility Optimization</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Team Formation: Systematic Literature Review</td>
+                        <td>Stavrou et al.</td>
+                        <td>2023</td>
+                        <td>Systematic Review</td>
+                        <td>Educational / Corporate</td>
+                        <td>Multi-Attribute Skill & Personality Metaheuristics</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Mentor-Mentee Matching Under Constraints</td>
+                        <td>O'Driscoll & Ye</td>
+                        <td>2026</td>
+                        <td>Research Article</td>
+                        <td>Mentorship / Education</td>
+                        <td>Dynamic Constraint Sequencing & Spatial Vectors</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>Group 2 | Intelligent Matching Beyond Similarity · Academic Literature Review 2026</p>
+            <p style="margin-top:4px; font-size:0.8rem;">Developed with HTML5, CSS3, & Pure JavaScript for GitHub Pages Deployment</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript for Filtering & Interactions -->
+    <script>
+        let currentFilter = 'all';
+
+        function setFilter(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterPapers();
+        }
+
+        function filterPapers() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.paper-card');
+
+            cards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const textContent = card.innerText.toLowerCase();
+
+                const matchesFilter = (currentFilter === 'all') || (cardType === currentFilter);
+                const matchesSearch = textContent.includes(query);
+
+                if (matchesFilter && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function scrollToTable() {
+            document.getElementById('compTableSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
